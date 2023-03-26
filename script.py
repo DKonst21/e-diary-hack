@@ -15,8 +15,8 @@ commendations = [' Молодец!', 'Отлично!', 'Хорошо!', 'Гор
 
 
 def get_child(schoolkid_name):
-    schoolkid = Schoolkid.objects.get(full_name__contains=schoolkid_name)
     try:
+        schoolkid = Schoolkid.objects.get(full_name__contains=schoolkid_name)
         fix_marks(schoolkid)
         print('Ученик найден')
         print('Оценки исправлены')
@@ -26,8 +26,7 @@ def get_child(schoolkid_name):
         print('Ученик не найден. '
               f'Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно. '
               'Для поиска необходимо использовать как имя, '
-              'так и фамилию ученика.'.format(schoolkid=schoolkid),
-              'так и фамилию ученика.'.format(schoolkid=schoolkid_surname_name))
+              'так и фамилию ученика.'.format(schoolkid=schoolkid))
     except Schoolkid.MultipleObjectsReturned:
         print('Найдено несколько учеников по данному запросу. '
               f'Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно.'
@@ -97,6 +96,12 @@ if __name__ == '__main__':
         input_schoolkid_subject = parse_user_input()
         schoolkid_name = input_schoolkid_subject['schoolkid']
         schoolkid_surname_name = input_schoolkid_subject.schoolkid_surname_name
+        schoolkid = input_schoolkid_subject.schoolkid
+        fix_marks(schoolkid)
+        print('Ученик найден')
+        print('Оценки исправлены')
+        remove_chastisements(schoolkid)
+        print('Замечания удалены')
     except SystemExit:
         print('Программа завершила работу неправильно, проверьте задаваемые атрибуты')
         exit()
