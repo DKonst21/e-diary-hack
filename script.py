@@ -7,7 +7,7 @@ django.setup()
 from datacenter.models import (Chastisement, Commendation, Lesson, Mark, Schoolkid, Subject)
 
 
-commendations = [' Молодец!', 'Отлично!', 'Хорошо!', 'Гораздо лучше, чем я ожидал!', 'Ты меня приятно удивил!',
+COMMENDATIONS = [' Молодец!', 'Отлично!', 'Хорошо!', 'Гораздо лучше, чем я ожидал!', 'Ты меня приятно удивил!',
                  'Великолепно!', 'Ты меня очень обрадовал!', 'Именно этого я давно ждал от тебя!',
                  'Сказано здорово – просто и ясно!', 'Прекрасно!', 'Ты, как всегда, точен!',
                  'Очень хороший ответ!', 'Талантливо!Молодец!', 'Ты сегодня прыгнул выше головы!',
@@ -63,12 +63,13 @@ def create_commendation(child, subjects):
                                         group_letter=child.group_letter,
                                         subject=subjects,
                                         ).last()
-    Commendation.objects.create(text=random.choice(commendations),
-                                created=last_lesson.date,
-                                schoolkid=child,
-                                subject=subjects,
-                                teacher=last_lesson.teacher,
-                                )
+    if last_lesson is not None:
+        Commendation.objects.create(text=random.choice(COMMENDATIONS),
+                                    created=last_lesson.date,
+                                    schoolkid=child,
+                                    subject=subjects,
+                                    teacher=last_lesson.teacher,
+                                    )
 
 
 def parse_user_input():
