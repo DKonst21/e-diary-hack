@@ -17,11 +17,6 @@ commendations = [' Молодец!', 'Отлично!', 'Хорошо!', 'Гор
 def get_child(schoolkid_name):
     try:
         schoolkid = Schoolkid.objects.get(full_name__contains=schoolkid_name)
-        fix_marks(schoolkid)
-        print('Ученик найден')
-        print('Оценки исправлены')
-        remove_chastisements(schoolkid)
-        print('Замечания удалены')
     except Schoolkid.DoesNotExist:
         print('Ученик не найден. '
               f'Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно. '
@@ -36,11 +31,11 @@ def get_child(schoolkid_name):
 
 
 def find_subject(subject, child):
-    input_schoolkid_subject = parse_user_input().subject
-    subjects = Subject.objects.get(title=subject, year_of_study=child.year_of_study)
     try:
+        input_schoolkid_subject = parse_user_input().subject
+        subjects = Subject.objects.get(title=subject, year_of_study=child.year_of_study)
         if input_schoolkid_subject:
-            create_commendation(schoolkid_name, input_schoolkid_subject)
+            create_commendation(child, subjects)
         print('Благодарность присвоена')
     except Subject.DoesNotExist:
         print('Предмет не найден. Пожалуйста проверьте название предмета.'
@@ -51,7 +46,6 @@ def find_subject(subject, child):
               'Пожалуйста проверьте название предмета. Название'
               f'предмета {subject} некорректно. Для поиска необходимо '
               'использовать корректное название.'.format(subject=subject))
-    return subjects
 
 
 def fix_marks(child):
@@ -93,15 +87,15 @@ def parse_user_input():
 
 if __name__ == '__main__':
     try:
-        input_schoolkid_subject = parse_user_input()
-        schoolkid_name = input_schoolkid_subject['schoolkid']
-        schoolkid_surname_name = input_schoolkid_subject.schoolkid_surname_name
-        schoolkid = input_schoolkid_subject.schoolkid
-        fix_marks(schoolkid)
+        input_schoolkid = parse_user_input()
+        schoolkid_name = input_schoolkid['schoolkid']
+        subject = input_schoolkid['subject']
+        fix_marks(schoolkid_name)
         print('Ученик найден')
         print('Оценки исправлены')
-        remove_chastisements(schoolkid)
+        remove_chastisements(schoolkid_name)
         print('Замечания удалены')
+        find_subject(subject, schoolkid_name)
     except SystemExit:
         print('Программа завершила работу неправильно, проверьте задаваемые атрибуты')
         exit()
