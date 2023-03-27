@@ -58,18 +58,20 @@ def remove_chastisements(child):
     chastisements.delete()
 
 
-def create_commendation(child, subjects):
+def create_commendation(child, subject):
     last_lesson = Lesson.objects.filter(year_of_study=child.year_of_study,
                                         group_letter=child.group_letter,
-                                        subject=subjects,
+                                        subject=subject,
                                         ).last()
-    if last_lesson is not None:
-        Commendation.objects.create(text=random.choice(COMMENDATIONS),
-                                    created=last_lesson.date,
-                                    schoolkid=child,
-                                    subject=subjects,
-                                    teacher=last_lesson.teacher,
-                                    )
+    if last_lesson is None:
+        print('Lesson not found')
+        return
+    Commendation.objects.create(text=random.choice(COMMENDATIONS),
+                                created=last_lesson.date,
+                                schoolkid=child,
+                                subject=subject,
+                                teacher=last_lesson.teacher,
+                                )
 
 
 def parse_user_input():
